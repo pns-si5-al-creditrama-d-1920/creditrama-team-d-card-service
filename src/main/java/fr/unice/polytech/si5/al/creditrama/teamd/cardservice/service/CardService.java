@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -16,6 +17,11 @@ public class CardService {
     @Autowired
     public CardService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
+    }
+
+    public Optional<Card> getCard(String cardNumber) {
+        BigInteger number = new BigInteger(cardNumber);
+        return cardRepository.findById(number);
     }
 
     public Card createCard(BankAccountInformation bankAccountInformation) {
