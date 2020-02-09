@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigInteger;
 
 @Builder
 @NoArgsConstructor
@@ -19,7 +18,7 @@ import java.math.BigInteger;
 public class Card implements Serializable {
 
     @Id
-    BigInteger number;
+    Long number;
 
     @NotNull
     String owner;

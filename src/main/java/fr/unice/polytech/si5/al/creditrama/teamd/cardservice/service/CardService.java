@@ -20,13 +20,12 @@ public class CardService {
     }
 
     public Optional<Card> getCard(String cardNumber) {
-        BigInteger number = new BigInteger(cardNumber);
-        return cardRepository.findById(number);
+        return cardRepository.findById(Long.valueOf(cardNumber));
     }
 
     public Card createCard(BankAccountInformation bankAccountInformation) {
         Card card = Card.builder().build();
-        card.setNumber(generateRandomDigits(16));
+        card.setNumber(generateRandomDigits(16).longValue());
         card.setCode(generateRandomDigits(4).intValue());
         card.setCvc(generateRandomDigits(3).intValue());
         card.setOwner(String.format("%s %s", bankAccountInformation.getFirstName(), bankAccountInformation.getLastName()));

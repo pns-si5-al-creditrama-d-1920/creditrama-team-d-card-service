@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -39,7 +38,7 @@ public class CardServiceTest {
                 .cvc(333)
                 .iban("FRFRFR")
                 .owner("Nate")
-                .number(new BigInteger("42"))
+                .number(Long.valueOf(42))
                 .build();
         cardRepository.save(card);
     }
@@ -55,7 +54,7 @@ public class CardServiceTest {
                 .build();
         Card expected = cardService.createCard(information);
 
-        BigInteger cardNumber = expected.getNumber();
+        Long cardNumber = expected.getNumber();
         Optional<Card> actual = cardRepository.findById(cardNumber);
         assertEquals(Optional.of(expected), actual);
         assertTrue(actual.isPresent());
@@ -65,7 +64,7 @@ public class CardServiceTest {
 
     @Test
     public void retrieveCard() {
-        BigInteger cardNumber = card.getNumber();
+        Long cardNumber = card.getNumber();
         Optional<Card> actual = cardRepository.findById(cardNumber);
         assertEquals(Optional.of(card), actual);
     }
