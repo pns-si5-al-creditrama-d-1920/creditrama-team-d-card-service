@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Builder
 @NoArgsConstructor
@@ -33,4 +34,6 @@ public class Card implements Serializable {
 
     @NotNull
     String iban;
+
+    LocalDate expiryDate;
 }

@@ -38,7 +38,7 @@ public class CardServiceTest {
                 .cvc(333)
                 .iban("FRFRFR")
                 .owner("Nate")
-                .number(Long.valueOf(42))
+                .number(42L)
                 .build();
         cardRepository.save(card);
     }

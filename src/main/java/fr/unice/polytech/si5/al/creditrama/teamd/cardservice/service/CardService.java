@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
 
@@ -30,6 +31,7 @@ public class CardService {
         card.setCvc(generateRandomDigits(3).intValue());
         card.setOwner(String.format("%s %s", bankAccountInformation.getFirstName(), bankAccountInformation.getLastName()));
         card.setIban(bankAccountInformation.getIban());
+        card.setExpiryDate(LocalDate.now().plusYears(2L));
         return cardRepository.save(card);
     }
 
