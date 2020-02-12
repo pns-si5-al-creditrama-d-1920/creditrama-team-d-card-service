@@ -1,5 +1,6 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.cardservice.service;
 
+import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.client.ClientServiceClient;
 import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.model.BankAccountInformation;
 import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.model.Card;
 import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.repository.CardRepository;
@@ -8,16 +9,20 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 @Service
 public class CardService {
     private CardRepository cardRepository;
+    private ClientServiceClient clientServiceClient;
 
     @Autowired
-    public CardService(CardRepository cardRepository) {
+    public CardService(CardRepository cardRepository, ClientServiceClient clientServiceClient) {
         this.cardRepository = cardRepository;
+        this.clientServiceClient = clientServiceClient;
     }
 
     public Optional<Card> getCard(String cardNumber) {
@@ -33,6 +38,16 @@ public class CardService {
         card.setIban(bankAccountInformation.getIban());
         card.setExpiryDate(LocalDate.now().plusYears(2L));
         return cardRepository.save(card);
+    }
+
+    public List<Card> getCardsOfClient(String userId) {
+        List<Card> cardsNumber = clientServiceClient.getCardsOfClientBankAccount(userId);
+        List<Card> cards = new ArrayList<>();
+        for (Card card : cardsNumber) {
+            Optional<Card> optionalCard = cardRepository.findById(card.getNumber());
+            optionalCard.ifPresent(cards::add);
+        }
+        return cards;
     }
 
     /**

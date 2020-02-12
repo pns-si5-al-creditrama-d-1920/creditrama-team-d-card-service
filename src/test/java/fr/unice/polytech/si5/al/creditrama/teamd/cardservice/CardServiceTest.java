@@ -1,5 +1,6 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.cardservice;
 
+import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.client.ClientServiceClient;
 import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.model.BankAccountInformation;
 import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.model.Card;
 import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.repository.CardRepository;
@@ -9,16 +10,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ContextConfiguration(initializers = PropertyOverrideContextInitializer.class)
 @Transactional
 public class CardServiceTest {
     @Autowired
@@ -26,6 +34,9 @@ public class CardServiceTest {
 
     @Autowired
     private CardService cardService;
+
+    @MockBean
+    private ClientServiceClient clientServiceClient;
 
     private Card card;
 
@@ -67,5 +78,30 @@ public class CardServiceTest {
         Long cardNumber = card.getNumber();
         Optional<Card> actual = cardRepository.findById(cardNumber);
         assertEquals(Optional.of(card), actual);
+    }
+
+    @Test
+    public void gettingCardOfClient() {
+        BankAccountInformation information = BankAccountInformation.builder()
+                .firstName("Nathan")
+                .lastName("Strobbe")
+                .iban("FR347YDFR43")
+                .build();
+
+        Card card1 = cardService.createCard(information);
+        Card card2 = cardService.createCard(information);
+        Card card3 = cardService.createCard(information);
+        List<Card> returnedCards = Arrays.asList(
+                Card.builder().number(card1.getNumber()).build(),
+                Card.builder().number(card2.getNumber()).build(),
+                Card.builder().number(card3.getNumber()).build()
+        );
+        when(clientServiceClient.getCardsOfClientBankAccount(any())).thenReturn(returnedCards);
+
+        List<Card> cards = cardService.getCardsOfClient("anyClient");
+
+        assertTrue(cards.contains(card1));
+        assertTrue(cards.contains(card2));
+        assertTrue(cards.contains(card3));
     }
 }

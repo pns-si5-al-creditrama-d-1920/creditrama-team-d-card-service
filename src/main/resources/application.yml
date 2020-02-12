@@ -33,3 +33,5 @@ security:
     client:
       client-id: mobile
       client-secret: pin
+
+service.client: ${CLIENT_HOST:http://localhost:8080}

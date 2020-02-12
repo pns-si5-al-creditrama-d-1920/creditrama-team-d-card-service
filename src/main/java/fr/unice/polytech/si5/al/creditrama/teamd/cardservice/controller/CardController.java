@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "content-type")
@@ -30,6 +31,11 @@ public class CardController {
     @PostMapping("cards")
     public ResponseEntity<Card> createCard(@RequestBody BankAccountInformation bankAccountInformation) {
         return new ResponseEntity<>(cardService.createCard(bankAccountInformation), HttpStatus.CREATED);
+    }
+
+    @GetMapping("clients/{userId}/cards")
+    public ResponseEntity<List<Card>> getCards(@PathVariable String userId) {
+        return ResponseEntity.ok(cardService.getCardsOfClient(userId));
     }
 
 }
