@@ -1,6 +1,5 @@
 package fr.unice.polytech.si5.al.creditrama.teamd.cardservice;
 
-import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.client.ClientServiceClient;
 import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.model.BankAccountInformation;
 import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.model.Card;
 import fr.unice.polytech.si5.al.creditrama.teamd.cardservice.repository.CardRepository;
@@ -10,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +19,6 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -34,9 +30,6 @@ public class CardServiceTest {
 
     @Autowired
     private CardService cardService;
-
-    @MockBean
-    private ClientServiceClient clientServiceClient;
 
     private Card card;
 
@@ -86,6 +79,7 @@ public class CardServiceTest {
                 .firstName("Nathan")
                 .lastName("Strobbe")
                 .iban("FR347YDFR43")
+                .userId(42L)
                 .build();
 
         Card card1 = cardService.createCard(information);
@@ -96,9 +90,8 @@ public class CardServiceTest {
                 Card.builder().number(card2.getNumber()).build(),
                 Card.builder().number(card3.getNumber()).build()
         );
-        when(clientServiceClient.getCardsOfClientBankAccount(any())).thenReturn(returnedCards);
 
-        List<Card> cards = cardService.getCardsOfClient("anyClient");
+        List<Card> cards = cardService.getCardsOfClient(information.getUserId());
 
         assertTrue(cards.contains(card1));
         assertTrue(cards.contains(card2));
