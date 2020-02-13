@@ -20,7 +20,7 @@ public class SwaggerDocumentationConfig implements WebMvcConfigurer {
         return new ApiInfoBuilder()
                 .title("CardService API")
                 .description("API for the CardService")
-                .version("1.0.0")
+                .version("1.0")
                 .build();
     }
 
