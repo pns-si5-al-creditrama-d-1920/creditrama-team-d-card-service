@@ -35,5 +35,7 @@ public class Card implements Serializable {
     @NotNull
     String iban;
 
+    Long clientId;
+
     LocalDate expiryDate;
 }

@@ -34,7 +34,7 @@ public class CardController {
     }
 
     @GetMapping("clients/{userId}/cards")
-    public ResponseEntity<List<Card>> getCards(@PathVariable String userId) {
+    public ResponseEntity<List<Card>> getCards(@PathVariable Long userId) {
         return ResponseEntity.ok(cardService.getCardsOfClient(userId));
     }
 
